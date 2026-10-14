@@ -11,6 +11,8 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    show: false,
+    backgroundThrottling: true,
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
       contextIsolation: true,
@@ -18,11 +20,15 @@ const createWindow = () => {
     },
   });
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
+
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
-  // Keep the renderer lean in production by skipping DevTools on launch.
-  // Developers can still open them manually when needed.
+  // Keep startup lightweight by avoiding automatic DevTools launch.
+  // Developers can still open the inspector manually when needed.
 };
 
 // This method will be called when Electron has finished
